@@ -1,5 +1,4 @@
-﻿
-#include "ListeFilms.hpp"
+﻿#include "ListeFilms.hpp"
 
 typedef uint8_t UInt8;
 typedef uint16_t UInt16;
@@ -30,7 +29,7 @@ string lireString(istream& fichier)
 }
 
 
- ListeFilms::ListeFilms()
+ListeFilms::ListeFilms()
 {
 	nElements_ = 0;
 	capacite_ = 1;
@@ -38,12 +37,12 @@ string lireString(istream& fichier)
 }
 
 
- ListeFilms::ListeFilms(std::string nomFichier)
+ListeFilms::ListeFilms(std::string nomFichier)
 {
 
 	ifstream fichier(nomFichier, ios::binary);
 	fichier.exceptions(ios::failbit);
-	
+
 	nElements_ = 0;
 	capacite_ = 1;
 	int nFilms = lireUint16(fichier);
@@ -66,7 +65,7 @@ void ListeFilms::detruireListeFilms()
 {
 	while (nElements_ != 0)
 	{
-	detruireFilm(elements_[0]);
+		detruireFilm(elements_[0]);
 	}
 	delete[] elements_;
 	elements_ = nullptr;
@@ -81,34 +80,36 @@ Film* ListeFilms::lireFilm(istream& fichier)
 	filmPtr->anneeSortie = lireUint16(fichier);
 	filmPtr->recette = lireUint16(fichier);
 
-	filmPtr->acteurs.nElements = lireUint8(fichier);
-	filmPtr->acteurs.capacite = filmPtr->acteurs.nElements;
+	//filmPtr->acteurs.nElements = ;
+	//filmPtr->acteurs.capacite = filmPtr->acteurs.nElements;
 
 	//Allocation de la liste d'acteur
-	filmPtr->acteurs.elements = new Acteur * [filmPtr->acteurs.capacite];
+	filmPtr->acteurs = ListeActeurs{ lireUint8(fichier) }; //new Acteur * [filmPtr->acteurs.capacite];
 	//NOTE: Vous avez le droit d'allouer d'un coup le tableau pour les acteurs, sans faire de réallocation comme pour ListeFilms.  Vous pouvez aussi copier-coller les fonctions d'allocation de ListeFilms ci-dessus dans des nouvelles fonctions et faire un remplacement de Film par Acteur, pour réutiliser cette réallocation.
 	for (int i = 0; i < filmPtr->acteurs.nElements; i++) {
 		filmPtr->acteurs.elements[i] = lireActeur(fichier); //TODO: Placer l'acteur au bon endroit dans les acteurs du film.
 		//TODO: Ajouter le film à la liste des films dans lesquels l'acteur joue.
-		filmPtr->acteurs.elements[i]->joueDans.ajouterFilm(filmPtr);
+		//filmPtr->acteurs.elements[i]->joueDans.ajouterFilm(filmPtr);
 	}
 	return filmPtr; //TODO: Retourner le pointeur vers le nouveau film.
 }
 
 
-Acteur* ListeFilms::lireActeur(istream& fichier)
+shared_ptr<Acteur> ListeFilms::lireActeur(istream& fichier)
 {
-	Acteur* actPtr = new Acteur;
-	actPtr->nom = lireString(fichier);
-	actPtr->anneeNaissance = lireUint16(fichier);
-	actPtr->sexe = lireUint8(fichier);
+	string nom = lireString(fichier);
+	int anneeNaissance = lireUint16(fichier);
+	char sexe = lireUint8(fichier);
 
-	Acteur* acteurExistant = trouverActeur(actPtr->nom);
+	shared_ptr<Acteur> actPtr = make_shared<Acteur>(nom, anneeNaissance, sexe);
+
+
+	shared_ptr<Acteur> acteurExistant = trouverActeur(actPtr->nom);
 	//check si existant
 	if (acteurExistant != nullptr)
 	{
-		actPtr->joueDans.detruireListeFilms();
-		delete actPtr;
+		//actPtr->joueDans.detruireListeFilms();
+		//delete actPtr;
 		actPtr = nullptr;
 		return acteurExistant;
 	}
@@ -119,9 +120,10 @@ Acteur* ListeFilms::lireActeur(istream& fichier)
 	}
 }
 
-Acteur* ListeFilms::trouverActeur(string nom) const
+shared_ptr<Acteur> ListeFilms::trouverActeur(string nom) const
 {
-	Acteur* ptrActeur = nullptr;
+
+	shared_ptr<Acteur> ptrActeur = nullptr;
 	for (int i = 0; i < nElements_; i++)
 	{
 		ptrActeur = trouverActeurListeActeurs(nom, elements_[i]->acteurs);
@@ -131,7 +133,7 @@ Acteur* ListeFilms::trouverActeur(string nom) const
 	return ptrActeur;
 }
 
-Acteur* ListeFilms::trouverActeurListeActeurs(string nomRechercher, ListeActeurs& listeActeurs) const
+shared_ptr<Acteur> ListeFilms::trouverActeurListeActeurs(string nomRechercher, ListeActeurs& listeActeurs) const
 {
 
 	for (int i = 0; i < listeActeurs.nElements; i++)
@@ -147,25 +149,23 @@ Acteur* ListeFilms::trouverActeurListeActeurs(string nomRechercher, ListeActeurs
 
 void ListeFilms::detruireFilm(Film* ptrFilm)
 {
-	for (int i = 0; i < ptrFilm->acteurs.nElements; i++)
+	/*for (int i = 0; i < ptrFilm->acteurs.nElements; i++)
 	{
-		Acteur* ptrActeur = ptrFilm->acteurs.elements[i];
+		shared_ptr<Acteur> ptrActeur = ptrFilm->acteurs.elements[i];
 		ptrActeur->joueDans.enleverFilm(ptrFilm);
 		if (!(ptrActeur->joueDans.nElements_))
 		{
 			//Debug
 			cout << "Destruction de l'acteur : " << ptrActeur->nom << endl;
 			ptrActeur->joueDans.detruireListeFilms();
-			delete ptrActeur; 
 			ptrActeur = nullptr;
 		}
 
-	}
+	}*/
 	enleverFilm(ptrFilm);
 	//relacher la memoire du film
-	delete[] ptrFilm->acteurs.elements;
 	ptrFilm->acteurs.elements = nullptr;
-	delete ptrFilm; 
+	delete ptrFilm;
 	ptrFilm = nullptr;
 }
 
@@ -186,10 +186,10 @@ void ListeFilms::enleverFilm(Film* ptrFilm)
 
 void ListeFilms::ajouterFilm(Film* ptrFilm)
 {
-	if (nElements_>=capacite_)
+	if (nElements_ >= capacite_)
 		doublerCapacite();
 	//add film
-	elements_[nElements_]= ptrFilm;
+	elements_[nElements_] = ptrFilm;
 
 	//update listeFilms
 	nElements_++;
@@ -206,7 +206,7 @@ void ListeFilms::doublerCapacite()
 	//copier
 	for (int i = 0; i < nElements_; i++)
 	{
-		elements_[i] =oldElements[i];
+		elements_[i] = oldElements[i];
 	}
 	//delete
 	delete[] oldElements;
@@ -221,42 +221,55 @@ void ListeFilms::afficherListeFilms() const
 	static const string ligneDeSeparation = "\n\033[35mфффффффффффффффффффффффффффффффффффффффф\033[0m\n";
 	cout << ligneDeSeparation;
 	//TODO: Changer le for pour utiliser un span.
-	span<Film*> lFilms{elements_, nElements_ };
+	span<Film*> lFilms{ elements_, nElements_ };
 	for (int i = 0; i < lFilms.size(); i++) {
 		//TODO: Afficher le film.
-		afficherFilm(*lFilms[i]);
+		cout << lFilms[i];
 		cout << ligneDeSeparation;
 	}
 }
 
-
+/*
 void ListeFilms::afficherFilm(const Film& film)const
 {
 	cout << " " << film.titre << ", " << film.realisateur << ", " << film.anneeSortie << ", " << film.recette << endl;
 	for (int i = 0; i < film.acteurs.nElements; i++)
 	{
-		afficherActeur(*film.acteurs.elements[i]);
+		afficherActeur(film.acteurs.elements[i]);
 	}
-}
+}*/
 
-void ListeFilms::afficherActeur(const Acteur& acteur) const
+/*
+ostream& ListeFilms::afficherActeur(ostream& o,const shared_ptr<Acteur>& acteur)
 {
-	cout << "  " << acteur.nom << ", " << acteur.anneeNaissance << " " << acteur.sexe << endl;
-}
+	cout << "  " << acteur->nom << ", " << acteur->anneeNaissance << " " << acteur->sexe << endl;
+}*/
 
 
-Film* ListeFilms::operator[] (std::size_t const index) const
+Film* ListeFilms::operator[] (size_t const index) const
 {
 	return elements_[index];
 }
 
 
-void afficherFilmographieActeur(const ListeFilms& listeFilms, const string& nomActeur)
+/*void afficherFilmographieActeur(const ListeFilms& listeFilms, const string& nomActeur)
 {
 	//TODO: Utiliser votre fonction pour trouver l'acteur (au lieu de le mettre à nullptr).
-	const Acteur* acteur = listeFilms.trouverActeur(nomActeur);
+	const shared_ptr<Acteur> acteur = listeFilms.trouverActeur(nomActeur);
 	if (acteur == nullptr)
 		cout << "Aucun acteur de ce nom" << endl;
 	else
 		acteur->joueDans.afficherListeFilms();
+}
+*/
+
+ostream& operator<< (ostream& o, const Film* film)
+{
+	o << " " << film->titre << ", " << film->realisateur << ", " << film->anneeSortie << ", " << film->recette << endl;
+	for (int i = 0; i < film->acteurs.nElements; i++)
+	{
+		shared_ptr<Acteur> acteur = film->acteurs.elements[i];
+		o << "  " << acteur->nom << ", " << acteur->anneeNaissance << " " << acteur->sexe << endl;
+	}
+	return o;
 }
