@@ -273,3 +273,18 @@ ostream& operator<< (ostream& o, const Film* film)
 	}
 	return o;
 }
+
+
+
+Film* ListeFilms::trouverFilmSi(const std::function<bool(Film*)>& critere) const
+{
+
+	for (Film* film : span<Film*>{elements_,nElements_})
+	{
+		if (critere(film))
+			return film;
+	}
+
+	return nullptr;
+}
+

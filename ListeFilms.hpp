@@ -3,7 +3,8 @@
 #include "ListeFilms.hpp"
 #include "bibliotheque_cours.hpp"
 #include "verification_allocation.hpp" // Nos fonctions pour le rapport de fuites de mémoire.
-#include "debogage_memoire.hpp"        // Ajout des numéros de ligne des "new" dans le rapport de fuites.
+#include "debogage_memoire.hpp"   // Ajout des numéros de ligne des "new" dans le rapport de fuites.
+#include "Liste.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -13,7 +14,9 @@
 #include <algorithm>
 #include <memory>
 #include "gsl/span"
+#include <functional>
 #include "cppitertools/range.hpp"
+
 
 #pragma endregion//}
 
@@ -28,7 +31,7 @@ struct ListeActeurs {
 	ListeActeurs(int size)
 	{
 		capacite = nElements = size;
-		elements = std::make_unique <std::shared_ptr<Acteur>[]> (capacite);
+		elements = std::make_unique <std::shared_ptr<Acteur>[]>(capacite);
 	}
 	ListeActeurs()
 	{
@@ -41,8 +44,8 @@ struct ListeActeurs {
 	{
 		capacite = listeActeurs.capacite;
 		nElements = listeActeurs.nElements;
-		elements = std::make_unique< std::shared_ptr<Acteur>[] > (listeActeurs.capacite);
-		for(int i=0; i<listeActeurs.nElements;i++)
+		elements = std::make_unique< std::shared_ptr<Acteur>[] >(listeActeurs.capacite);
+		for (int i = 0; i < listeActeurs.nElements; i++)
 		{
 			elements[i] = listeActeurs.elements[i];
 		}
@@ -94,6 +97,9 @@ public:
 	void detruireListeFilms();
 	Film* operator[] (const std::size_t index) const;
 
+	
+	Film* trouverFilmSi(const std::function<bool(Film*)>& critere) const;
+
 
 private:
 	int capacite_, nElements_;
@@ -116,11 +122,19 @@ struct Acteur
 		nom = name;
 		anneeNaissance = birthYear;
 		sexe = sex;
-	//	joueDans = ListeFilms{};
+		//	joueDans = ListeFilms{};
 	}
-	
+
 };
 
 std::ostream& operator<< (std::ostream& o, const Film* film);
 
 //void afficherFilmographieActeur(const ListeFilms& listeFilms, const std::string& nomActeur);
+
+
+
+
+
+
+
+

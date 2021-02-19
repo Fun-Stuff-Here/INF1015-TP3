@@ -27,6 +27,9 @@
     <ClCompile Include="..\verification_allocation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Liste.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\bibliotheque_cours.hpp">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\verification_allocation.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Liste.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

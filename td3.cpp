@@ -42,7 +42,7 @@ int main()
 	ptrCumberbatch->anneeNaissance = 1976;
 	cout << ligneDeSeparation << "Liste des films où Benedict Cumberbatch joue sont:" << endl;
 
-
+	cout << ligneDeSeparation << "Chap 7-8 :" << endl;
 	//chap 7-8
 	Film skylien = listeFilms[0]; /* listeFilms[0] ou *listeFilms[0] selon ce qui fait du sens */
 	skylien.titre = "Skylien";
@@ -51,6 +51,15 @@ int main()
 	cout << &skylien;
 	cout << listeFilms[0];
 	cout << listeFilms[1];
+
+
+
+	cout << ligneDeSeparation << "Chap 10 :" << endl;
+	//chap 10
+
+	cout << listeFilms.trouverFilmSi([](Film* film) -> bool {return film->recette == 955; }) << endl;
+
+
 
 
 	//TODO: Afficher la liste des films où Benedict Cumberbatch joue.  Il devrait y avoir Le Hobbit et Le jeu de l'imitation.
