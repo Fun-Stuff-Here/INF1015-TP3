@@ -147,18 +147,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\bibliotheque_cours.cpp" />
+    <ClCompile Include="..\Liste.cpp" />
     <ClCompile Include="..\ListeFilms.cpp" />
     <ClCompile Include="..\td3.cpp" />
     <ClCompile Include="..\verification_allocation.cpp" />
-    <ClCompile Include="Liste.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\bibliotheque_cours.hpp" />
     <ClInclude Include="..\debogage_memoire.hpp" />
+    <ClInclude Include="..\Liste.hpp" />
     <ClInclude Include="..\ListeFilms.hpp" />
     <ClInclude Include="..\structures.hpp" />
     <ClInclude Include="..\verification_allocation.hpp" />
-    <ClInclude Include="Liste.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\films.bin" />
