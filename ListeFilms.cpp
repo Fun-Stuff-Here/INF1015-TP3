@@ -1,4 +1,9 @@
-﻿#include "ListeFilms.hpp"
+﻿/////////////////////////////////////////////////////////////////
+// Implémentation de la classe ListeFilms 
+// Auteurs : Elizabeth Michaud 2073093, Nicolas Dépelteau 2083544
+// TD3-INF1015
+/////////////////////////////////////////////////////////////////
+#include "ListeFilms.hpp"
 
 typedef uint8_t UInt8;
 typedef uint16_t UInt16;

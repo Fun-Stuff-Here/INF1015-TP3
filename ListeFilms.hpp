@@ -1,3 +1,8 @@
+/////////////////////////////////////////////////////////////////
+// Définitions de la classe ListeFilms 
+// Auteurs : Elizabeth Michaud 2073093, Nicolas Dépelteau 2083544
+// TD3-INF1015
+/////////////////////////////////////////////////////////////////
 #pragma once
 #pragma region "Includes"//{
 #include "ListeFilms.hpp"

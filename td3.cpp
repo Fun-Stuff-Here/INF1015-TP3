@@ -1,4 +1,8 @@
-﻿
+﻿/////////////////////////////////////////////////////////////////
+// Main 
+// Auteurs : Elizabeth Michaud 2073093, Nicolas Dépelteau 2083544
+// TD3-INF1015
+/////////////////////////////////////////////////////////////////
 #define _CRT_SECURE_NO_WARNINGS // On permet d'utiliser les fonctions de copies de chaînes qui sont considérées non sécuritaires.
 #include "ListeFilms.hpp"
 
