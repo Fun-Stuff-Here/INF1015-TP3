@@ -5,7 +5,6 @@
 #include "verification_allocation.hpp" // Nos fonctions pour le rapport de fuites de mémoire.
 #include "debogage_memoire.hpp"   // Ajout des numéros de ligne des "new" dans le rapport de fuites.
 #include "Liste.hpp"
-
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -16,45 +15,11 @@
 #include "gsl/span"
 #include <functional>
 #include "cppitertools/range.hpp"
-
-
+#include "Liste.hpp"
 #pragma endregion//}
 
-
 struct Film; struct Acteur; // Permet d'utiliser les types alors qu'ils seront défini après.
-
-
-struct ListeActeurs {
-
-	int capacite{}, nElements;
-	std::unique_ptr <std::shared_ptr<Acteur>[]> elements; // Pointeur vers un tableau de Acteur*, chaque Acteur* pointant vers un Acteur.
-	ListeActeurs(int size)
-	{
-		capacite = nElements = size;
-		elements = std::make_unique <std::shared_ptr<Acteur>[]>(capacite);
-	}
-	ListeActeurs()
-	{
-		nElements = 0;
-		capacite = 1;
-		elements = std::make_unique <std::shared_ptr<Acteur>[]>(capacite);
-	}
-
-	ListeActeurs& operator= (const ListeActeurs& listeActeurs)
-	{
-		capacite = listeActeurs.capacite;
-		nElements = listeActeurs.nElements;
-		elements = std::make_unique< std::shared_ptr<Acteur>[] >(listeActeurs.capacite);
-		for (int i = 0; i < listeActeurs.nElements; i++)
-		{
-			elements[i] = listeActeurs.elements[i];
-		}
-		return *this;
-	}
-};
-
-
-
+using ListeActeurs = Liste<Acteur>;
 
 struct Film
 {
@@ -90,16 +55,11 @@ public:
 	void enleverFilm(Film* PtrFilm);
 	void afficherListeFilms() const;
 	friend std::ostream& operator<< (std::ostream& o, const Film* film);
-	//void afficherFilm(const Film& film)const;
 	std::ostream& afficherActeur(std::ostream& o, const std::shared_ptr<Acteur>& acteur);
-	//void afficherActeur(const std::shared_ptr<Acteur>& acteur) const;
 	void detruireFilm(Film* ptrFilm);
 	void detruireListeFilms();
 	Film* operator[] (const std::size_t index) const;
-
-	
 	Film* trouverFilmSi(const std::function<bool(Film*)>& critere) const;
-
 
 private:
 	int capacite_, nElements_;
@@ -108,28 +68,29 @@ private:
 	Film* lireFilm(std::istream& fichier);
 	std::shared_ptr<Acteur> lireActeur(std::istream& fichier);
 	std::shared_ptr<Acteur> trouverActeurListeActeurs(std::string nomRechercher, ListeActeurs& listeActeurs) const;
-
-
 };
 
 
 struct Acteur
 {
 	std::string nom; int anneeNaissance; char sexe;
-	//ListeFilms joueDans;
 	Acteur(std::string name, int birthYear, char sex)
 	{
 		nom = name;
 		anneeNaissance = birthYear;
 		sexe = sex;
-		//	joueDans = ListeFilms{};
 	}
-
+	Acteur()
+	{
+		nom = "";
+		anneeNaissance = 0;
+		sexe = ' ';
+	}
 };
 
 std::ostream& operator<< (std::ostream& o, const Film* film);
 
-//void afficherFilmographieActeur(const ListeFilms& listeFilms, const std::string& nomActeur);
+
 
 
 

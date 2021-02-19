@@ -30,7 +30,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -147,7 +147,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\bibliotheque_cours.cpp" />
-    <ClCompile Include="..\Liste.cpp" />
     <ClCompile Include="..\ListeFilms.cpp" />
     <ClCompile Include="..\td3.cpp" />
     <ClCompile Include="..\verification_allocation.cpp" />
