@@ -83,7 +83,8 @@ int main()
 	//(aucune ligne rouge dans la couverture de code;
 	//c'est normal que les lignes de "new" et "delete" soient jaunes).
 	//Vous avez aussi le droit d'effacer les lignes du programmes qui ne sont pas exécutée, si finalement vous pensez qu'elle ne sont pas utiles.
-	
+	cout << listeFilms.trouverFilmSi([](Film* film) -> bool {return film->titre == "Not there"; }) << endl;
+
 	//L'objet verifierFuitesAllocations devrait afficher "Aucune fuite detectee." a la sortie du programme;
 	//il affichera "Fuite detectee:" avec la liste des blocs, s'il manque des delete.
 	listeFilms.detruire();
