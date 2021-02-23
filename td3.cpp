@@ -1,8 +1,11 @@
-﻿/////////////////////////////////////////////////////////////////
-// Main 
-// Auteurs : Elizabeth Michaud 2073093, Nicolas Dépelteau 2083544
-// TD3-INF1015
-/////////////////////////////////////////////////////////////////
+﻿/*
+* Programme qui lit un fichier de film et le manipule, TD3-INF1015
+*\file		td3.cpp
+*\author	Elizabeth Michaud 2073093, Nicolas Dépelteau 2083544
+*\date		7 mars 2021
+* Créé le	23 février 2021
+*/
+
 #define _CRT_SECURE_NO_WARNINGS // On permet d'utiliser les fonctions de copies de chaînes qui sont considérées non sécuritaires.
 #include "ListeFilms.hpp"
 
@@ -20,7 +23,7 @@ int main()
 
 	static const string ligneDeSeparation = "\n\033[35m═══════════════════════════════════════\033[0m\n";
 
-	ListeFilms listeFilms{ "../films.bin" };
+	ListeFilms listeFilms{ "films.bin" };
 
 	cout << ligneDeSeparation << "Le premier film de la liste est:" << endl;
 	
@@ -28,7 +31,7 @@ int main()
 
 	cout << ligneDeSeparation << "Les films sont:" << endl;
 
-	listeFilms.afficherListeFilms();
+	listeFilms.afficher();
 
 	shared_ptr<Acteur> ptrCumberbatch = listeFilms.trouverActeur("Benedict Cumberbatch");
 	ptrCumberbatch->anneeNaissance = 1976;
@@ -75,7 +78,7 @@ int main()
 	listeFilms.detruireFilm(listeFilms[0]);
 	cout << ligneDeSeparation << "Les films sont maintenant:" << endl;
 
-	listeFilms.afficherListeFilms();
+	listeFilms.afficher();
 	//TODO: Faire les appels qui manquent pour avoir 0% de lignes non exécutées dans le programme
 	//(aucune ligne rouge dans la couverture de code;
 	//c'est normal que les lignes de "new" et "delete" soient jaunes).
@@ -83,7 +86,7 @@ int main()
 	
 	//L'objet verifierFuitesAllocations devrait afficher "Aucune fuite detectee." a la sortie du programme;
 	//il affichera "Fuite detectee:" avec la liste des blocs, s'il manque des delete.
-	listeFilms.detruireListeFilms();
+	listeFilms.detruire();
 }
 
 

@@ -1,15 +1,21 @@
-/////////////////////////////////////////////////////////////////
-// Définitions de la classe ListeFilms 
-// Auteurs : Elizabeth Michaud 2073093, Nicolas Dépelteau 2083544
-// TD3-INF1015
-/////////////////////////////////////////////////////////////////
+/*
+* Définition de la Classe ListeFilms et structures utiles, TD3-INF1015
+*\file		ListeFilms.hpp
+*\author	Elizabeth Michaud 2073093, Nicolas Dépelteau 2083544
+*\date		7 mars 2021
+* Créé le	23 février 2021
+*/
 #pragma once
+#ifndef LISTEFILMS_H
+#define LISTEFILMS_H
+
 #pragma region "Includes"//{
-#include "ListeFilms.hpp"
 #include "bibliotheque_cours.hpp"
 #include "verification_allocation.hpp" // Nos fonctions pour le rapport de fuites de mémoire.
 #include "debogage_memoire.hpp"   // Ajout des numéros de ligne des "new" dans le rapport de fuites.
-#include "Liste.hpp"
+#include "gsl/span"
+#include "cppitertools/range.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -17,9 +23,9 @@
 #include <limits>
 #include <algorithm>
 #include <memory>
-#include "gsl/span"
 #include <functional>
-#include "cppitertools/range.hpp"
+#include <iterator>
+
 #include "Liste.hpp"
 #pragma endregion//}
 
@@ -51,35 +57,51 @@ struct Film
 
 class ListeFilms
 {
+	//https://www.youtube.com/watch?v=F9eDv-YIOQ0&ab_channel=TheCherno
+public:
+	using ValueType = Film*;
+	using Iterator = ListeIterator<ValueType>;
+
 public:
 	explicit ListeFilms();
-	explicit ListeFilms(std::string nomFichier);
-	~ListeFilms();
-	void ajouterFilm(Film* ptrFilm);
-	std::shared_ptr<Acteur> trouverActeur(std::string nom) const;
-	void enleverFilm(Film* PtrFilm);
-	void afficherListeFilms() const;
-	friend std::ostream& operator<< (std::ostream& o, const Film* film);
-	std::ostream& afficherActeur(std::ostream& o, const std::shared_ptr<Acteur>& acteur);
-	void detruireFilm(Film* ptrFilm);
-	void detruireListeFilms();
+	explicit ListeFilms(const std::string& nomFichier);
+	~ListeFilms() { detruire(); }
+
+	void ajouterFilm(Film* film);
+	void enleverFilm(Film* film);
+
+	void afficher() const;
+	std::ostream& afficherActeur(std::ostream& ostream, const std::shared_ptr<Acteur>& acteur);
+	friend std::ostream& operator<< (std::ostream& ostream, const Film* film);
+	
+	void detruireFilm(Film* film);
+	void detruire();
+
 	Film* operator[] (const std::size_t index) const;
 	Film* trouverFilmSi(const std::function<bool(Film*)>& critere) const;
+	std::shared_ptr<Acteur> trouverActeur(const std::string& nom) const;
+
+	//https://www.youtube.com/watch?v=F9eDv-YIOQ0&ab_channel=TheCherno
+	ListeIterator<ValueType> begin() { return ListeIterator(elements_); }
+	ListeIterator<ValueType> begin() const { return ListeIterator{ elements_ }; }
+	ListeIterator<ValueType> end() { return ListeIterator(elements_ + nElements_); }
+	ListeIterator<ValueType> end() const { return ListeIterator{ elements_ + nElements_ }; }
 
 private:
 	int capacite_, nElements_;
 	Film** elements_;
+
 	void doublerCapacite();
 	Film* lireFilm(std::istream& fichier);
 	std::shared_ptr<Acteur> lireActeur(std::istream& fichier);
-	std::shared_ptr<Acteur> trouverActeurListeActeurs(std::string nomRechercher, ListeActeurs& listeActeurs) const;
+	std::shared_ptr<Acteur> trouverActeurListeActeurs(const std::string& nomRechercher,const ListeActeurs& listeActeurs) const;
 };
 
 
 struct Acteur
 {
 	std::string nom; int anneeNaissance; char sexe;
-	Acteur(std::string name, int birthYear, char sex)
+	Acteur(const std::string name, const int birthYear,const char sex)
 	{
 		nom = name;
 		anneeNaissance = birthYear;
@@ -93,7 +115,11 @@ struct Acteur
 	}
 };
 
-std::ostream& operator<< (std::ostream& o, const Film* film);
+std::ostream& operator<< (std::ostream& ostream, const Film* film);
+
+
+
+#endif // !LISTEFILMS_H
 
 
 
